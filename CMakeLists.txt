@@ -21,8 +21,8 @@ set(ament_dependencies
 add_executable(traffic_light_node src/traffic_light_node.cpp)
 ament_target_dependencies(traffic_light_node ${ament_dependencies})
 
-# add_executable(car_node src/car_node.cpp)
-# ament_target_dependencies(car_node ${ament_dependencies})
+add_executable(car_node src/car_node.cpp)
+ament_target_dependencies(car_node ${ament_dependencies})
 
 install(DIRECTORY launch
   DESTINATION share/${PROJECT_NAME}
@@ -30,7 +30,7 @@ install(DIRECTORY launch
 
 install(TARGETS
   traffic_light_node
-  # car_node
+  car_node
   DESTINATION lib/${PROJECT_NAME}
 )
 

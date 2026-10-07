@@ -3,7 +3,6 @@
 #include <string>
 
 #include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/string.hpp"
 #include "std_msgs/msg/int32.hpp"
 
 using namespace std::chrono_literals;
@@ -28,6 +27,8 @@ public:
         timer_ = this->create_wall_timer(
             2s,
             std::bind(&CarNode::updateCar, this));
+
+        updateCar();
     }
 
 private:
@@ -35,30 +36,34 @@ private:
     {
         traffic_light_id_ = message->data;
         traffic_light_state_ = (traffic_light_id_ == 0) ? "GREEN" : (traffic_light_id_ == 2) ? "RED" : "YELLOW";
-
-        // RCLCPP_INFO(
-        //     this->get_logger(),
-        //     "Traffic light: %s",
-        //     traffic_light_state.c_str());
     }
 
     void updateCar()
-    {
-        distance_to_light_ = traffic_lights_distance_ - position_;
-        
-        if (distance_to_light_ == 0.0 && traffic_light_id_ == 2){
-            speed_ = 0.0;
-            car_state_ = "MEGÁLL";
-            position_ = 0.0;
+    {   
+        if(distance_to_light_ <= 0.0){
+            if(traffic_light_id_ == 2){
+                speed_ = 0.0;
+                car_state_ = "MEGÁLL";
+                position_ = 0.0;
+            }
+            else{
+                if(car_state_ == "MEGÁLL"){
+                    position_ = 10.0;
+                    distance_to_light_ = traffic_lights_distance_ - position_;
+                }
+                speed_ = speed_ + 5.0;
+                car_state_ = "GYORSÍT";
+                position_ = 0.0;
+            }
         }
-        else if(distance_to_light_ == 0.0 && traffic_light_id_ != 2) {
-            speed_ = speed_ + 5.0;
-            car_state_ = "GYORSÍT";
-            position_ = 0.0;
-        }
-        else if (speed_ * 2.0 > distance_to_light_){
-            if(speed_ != 0.0){
-                speed_ = speed_ - 5.0;
+        else if (speed_ / 5.0 > distance_to_light_ / 10.0){
+            if (speed_ >= 5.0)
+            {
+                speed_ -= 5.0;
+            }
+            else
+            {
+                speed_ = 0.0;
             }
             car_state_ = "LASSÍT";
         }
@@ -67,7 +72,12 @@ private:
         }
         else if (speed_ < max_speed_){
             speed_ = speed_ + 5.0;
-            car_state_ = "GYORSÍT";
+            if (speed_ == max_speed_){
+                car_state_ = "HALAD";
+            }
+            else{
+                car_state_ = "GYORSÍT";
+            }
         }
         
         RCLCPP_INFO(
@@ -78,12 +88,14 @@ private:
             distance_to_light_,
             traffic_light_state_.c_str());
         
-        position_ += 10.0;
-        distance_to_light_ = traffic_lights_distance_ - position_;
+        if (car_state_ != "MEGÁLL"){
+            position_ += 10.0;
+            distance_to_light_ = traffic_lights_distance_ - position_;
+        }
     }
 
     static constexpr double traffic_lights_distance_ = 100.0; // A lámpák közötti távolság m-ben
-    static constexpr double max_speed_ = 20.0; // Az autó maximális sebessége m/s-ban
+    static constexpr double max_speed_ = 40.0; // Az autó maximális sebessége m/s-ban
     std::string traffic_light_state_;
     int traffic_light_id_; // 0: GREEN, 1: GREEN-YELLOW, 2: RED, 3: RED-YELLOW
     double position_; // Az autó megtett uta (pozíciója) az utolsó lámpától mérve

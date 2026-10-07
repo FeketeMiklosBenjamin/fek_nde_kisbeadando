@@ -3,7 +3,6 @@
 #include <string>
 
 #include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/string.hpp"
 #include "std_msgs/msg/int32.hpp"
 
 using namespace std::chrono_literals;
@@ -12,7 +11,7 @@ class TrafficLightNode : public rclcpp::Node
 {
 public:
     TrafficLightNode()
-        : Node("traffic_light_node"), current_state_id_(0), timer_()
+        : Node("traffic_light_node"), current_state_id_(0)
     {
         publisher_ = this->create_publisher<std_msgs::msg::Int32>(
             "/traffic_light", 10);
@@ -59,19 +58,19 @@ private:
         std_msgs::msg::Int32 message;
         message.data = current_state_id_;
         std::string state_str;
-        state_str = (current_state_id_ == 0) ? "GREEN" : (current_state_id_ == 2) ? "RED" : "YELLOW";
+        // state_str = (current_state_id_ == 0) ? "GREEN" : (current_state_id_ == 2) ? "RED" : "YELLOW";
 
         publisher_->publish(message);
 
-        RCLCPP_INFO(
-            this->get_logger(),
-            "Traffic light: %s",
-            state_str.c_str());
+        // RCLCPP_INFO(
+        //     this->get_logger(),
+        //     "Traffic light: %s",
+        //     state_str.c_str());
     }
     int current_state_id_; // 0: GREEN, 1: GREEN-YELLOW, 2: RED, 3: RED-YELLOW
     static constexpr int RED_DURATION_ = 4;
     static constexpr int YELLOW_DURATION_ = 2;
-    static constexpr int GREEN_DURATION_ = 7;
+    static constexpr int GREEN_DURATION_ = 8;
     int state_time_;
 
     rclcpp::Publisher<std_msgs::msg::Int32>::SharedPtr publisher_;

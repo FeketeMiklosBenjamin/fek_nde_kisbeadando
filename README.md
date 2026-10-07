@@ -29,28 +29,21 @@ source ~/ros2_ws/install/setup.bash
 </details>
 
 ``` r
-ros2 launch fek_nde_kisbeadando launch_example1.launch.py
+ros2 launch fek_nde_kisbeadando simulation.launch.py
 ```
 
-# Delete this part if you are using it as a template
+## Graph
 
-ROS 2 pacage template, to get started, use template by clicking on the Green button labeled [`Use this template`](https://github.com/FeketeMiklosBenjamin/fek_nde_kisbeadando/generate) / [`Create new repository`](https://github.com/FeketeMiklosBenjamin/fek_nde_kisbeadando/generate). 
+```mermaid
+graph LR
+    id1([/traffic_light_node]):::red
+    id2(/traffic_light):::light
+    id3([/car_node]):::red
 
-<p align="center"><img src="img/use_this_template01.png" width="60%" /></p>
+    id1 --> id2 --> id3
 
-
-Let's assume 
-- your Github username is `mycoolusername`
-- your ROS 2 repo shold be `cool_ros2_package`
-
-Replace everything in the cloned repo:
-
-- `fek_nde_kisbeadando` >> `cool_ros2_package` (the folder was already renamed after `Use this template`)
-- `FeketeMiklosBenjamin` >> `mycoolusername`
-- find all `todo` strings and fill the blanks
-
-The easiest way is VS code:
-
-<p align="center"><img src="img/replace01.png" width="60%" /></p>
-
-Now `colcon build` your ROS 2 package and you can start wokring.
+    classDef light fill:#34aec5,stroke:#152742,stroke-width:2px,color:#152742
+    classDef dark fill:#152742,stroke:#34aec5,stroke-width:2px,color:#34aec5
+    classDef white fill:#ffffff,stroke:#152742,stroke-width:2px,color:#152742
+    classDef red fill:#ef4638,stroke:#152742,stroke-width:2px,color:#fff
+```

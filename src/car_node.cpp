@@ -95,7 +95,7 @@ private:
     }
 
     static constexpr double traffic_lights_distance_ = 100.0; // A lámpák közötti távolság m-ben
-    static constexpr double max_speed_ = 40.0; // Az autó maximális sebessége m/s-ban
+    static constexpr double max_speed_ = 25.0; // Az autó maximális sebessége m/s-ban
     std::string traffic_light_state_;
     int traffic_light_id_; // 0: GREEN, 1: GREEN-YELLOW, 2: RED, 3: RED-YELLOW
     double position_; // Az autó megtett uta (pozíciója) az utolsó lámpától mérve
